@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body>
+    <h2>Dashboard</h2>
+    <div id="welcomeMessage"></div>
+    <button id="logoutButton">Logout</button>
+
+    <script>
+        // Fetch Protected Resource
+        function fetchProtectedResource(token) {
+            const protectedUrl = 'http://127.0.0.1:8000/protected-resource/';
+
+            fetch(protectedUrl, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Token ${token}`
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else if (response.status === 401) {
+                    throw new Error('Unauthorized. Please log in again.');
+                } else {
+                    throw new Error('An error occurred.');
+                }
+            })
+            .then(data => {
+                // Display the protected data
+                document.getElementById('welcomeMessage').textContent = 
+                    `Hello, ${data.username}! Your email is ${data.email}`;
+            })
+            .catch(error => {
+                console.error('Error:', error.message);
+                alert(error.message);
+
+                // Redirect to the login page if unauthorized
+                window.location.href = 'login.html';
+            });
+        }
+
+        // Check for Token on Page Load
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('authToken');
+            if (token) {
+                fetchProtectedResource(token);
+            } else {
+                alert('You are not logged in.');
+                window.location.href = 'index.html';
+            }
+        });
+
+        // Handle Logout
+        document.getElementById('logoutButton').addEventListener('click', () => {
+            localStorage.removeItem('authToken'); // Remove token
+            window.location.href = 'index.html'; // Redirect to login page
+        });
+    </script>
+</body>
+</html>

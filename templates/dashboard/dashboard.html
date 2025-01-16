@@ -1,0 +1,33 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<table class="table table-bordered bg-primary text-light">
+    <thead>
+        <tr class="w-1">
+            <th>Packet Number</th>
+            <th>Source IP</th>
+            <th>Destination IP</th>
+            <th>Protocol</th>
+            <th>Source Port</th>
+            <th>Destination Port</th>
+            <th>Packet Data</th>
+            <th>Timestamp</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for packet in packets %}
+        <tr>
+            <td>{{ packet.packet_number }}</td>
+            <td>{{ packet.source_ip }}</td>
+            <td>{{ packet.destination_ip }}</td>
+            <td>{{ packet.protocol }}</td>
+            <td>{{ packet.source_port }}</td>
+            <td>{{ packet.destination_port }}</td>
+            <td>{{ packet.packet_data }}</td>
+            <td>{{ packet.timestamp }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

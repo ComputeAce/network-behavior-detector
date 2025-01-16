@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    <h2>Login</h2>
+    <form id="loginForm">
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+    </form>
+
+    <script>
+        // Handle Login Form Submission
+        const loginForm = document.getElementById('loginForm');
+        loginForm.addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent page refresh
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            fetch('http://127.0.0.1:8000/login/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else if (response.status === 401) {
+                    throw new Error('Invalid credentials.');
+                } else {
+                    throw new Error('An error occurred.');
+                }
+            })
+            .then(data => {
+                const token = data.token;
+
+                // Save the token in localStorage
+                localStorage.setItem('authToken', token);
+
+                // Redirect to the dashboard
+                window.location.href = 'dashboard.html';
+            })
+            .catch(error => {
+                console.error('Error:', error.message);
+                alert(error.message);
+            });
+        });
+    </script>
+</body>
+</html>
