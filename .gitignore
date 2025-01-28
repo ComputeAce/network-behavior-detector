@@ -4,3 +4,5 @@ __pycache__/
 
 # Ignore SQLite database
 db.sqlite3
+network_sniffer.log
+packet_capture.log
